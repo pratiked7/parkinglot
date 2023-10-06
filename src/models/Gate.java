@@ -5,15 +5,13 @@ import models.constants.GateType;
 
 public class Gate extends BaseModel{
 
-    private String operator;
+    private String operator; //TODO: convert to an Operator model
     private int floorNumber;
-
     private int parkingLotId;
-
     private GateType gateType;
     private GateStatus gateStatus;
-
     private String gateNumber;
+
 
     public String getOperator() {
         return operator;

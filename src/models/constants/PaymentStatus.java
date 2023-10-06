@@ -1,5 +1,5 @@
 package models.constants;
 
 public enum PaymentStatus {
-    COMPLETED, FAILED
+    SUCCESSFUL, FAILED, IN_PROGRESS
 }
