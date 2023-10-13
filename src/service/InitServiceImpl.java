@@ -9,6 +9,10 @@ import repository.GateRepository;
 import repository.ParkingFloorRepository;
 import repository.ParkingLotRepository;
 import repository.ParkingSlotRepository;
+import service.strategy.billCalculationStrategy.BillCalculationStrategy;
+import service.strategy.billCalculationStrategy.BillCalculationStrategyFactory;
+import service.strategy.slotAllocationStrategy.SlotAllocationStrategy;
+import service.strategy.slotAllocationStrategy.SlotAllocationStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +43,9 @@ public class InitServiceImpl implements InitService {
         parkingLot.setAddress("Street 123");
         parkingLot.setParkingLotStatus(ParkingLotStatus.OPEN);
         parkingLot.setSupportedVehicleType(new ArrayList<>(Arrays.asList(VehicleType.CAR, VehicleType.BIKE)));
+        parkingLot.setSlotAllocationStrategy(SlotAllocationStrategyFactory.getSlotAllocationStrategy());
+        parkingLot.setBillCalculationStrategy(BillCalculationStrategyFactory.getBillCalculationStrategy());
+
         List<ParkingFloor> floors = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
@@ -46,37 +53,35 @@ public class InitServiceImpl implements InitService {
             ParkingFloor parkingFloor = new ParkingFloor();
             parkingFloor.setId(i);
             parkingFloor.setFloorNumber(i);
+
             List<ParkingSlot> slots = new ArrayList<>();
 
             for (int j = 1; j <= 10; j++) {
-                ParkingSlot parkingSlot = new ParkingSlot();
-                parkingSlot.setNumber(i * 100 + j);
-                if(j%2 == 0){
-                    parkingSlot.setSupportedVehicleType(VehicleType.CAR);
-                } else {
-                    parkingSlot.setSupportedVehicleType(VehicleType.BIKE);
-                }
-                parkingSlot.setParkingSlotStatus(ParkingSlotStatus.AVAILABLE);
+
+                VehicleType supportedVehicleType = j%2 != 0 ? VehicleType.BIKE : VehicleType.CAR;
+
+                ParkingSlot parkingSlot = new ParkingSlot(i*100 + j, i*100 + j, supportedVehicleType);
                 slots.add(parkingSlot);
                 parkingSlotRepository.put(parkingSlot);
             }
             parkingFloor.setParkingSlots(slots);
+            parkingFloor.setParkingFloorStatus(ParkingFloorStatus.OPEN);
 
             Gate entryGate = new Gate();
             entryGate.setId(i * 10 + 1);
             entryGate.setGateNumber(String.valueOf(i * 10 + 1));
             entryGate.setGateStatus(GateStatus.OPEN);
             entryGate.setGateType(GateType.ENTRY);
-            entryGate.setOperator("Rahul");
+            entryGate.setOperator("Pratik");
             entryGate.setParkingLotId(1);
             entryGate.setFloorNumber(i);
 
             Gate exitGate = new Gate();
-            exitGate.setId(i * 10 + 1);
-            exitGate.setGateNumber(String.valueOf(i * 10 + 1));
+            exitGate.setId(i * 10 + 2);
+            exitGate.setGateNumber(String.valueOf(i * 10 + 2));
             exitGate.setGateStatus(GateStatus.OPEN);
             exitGate.setGateType(GateType.EXIT);
-            exitGate.setOperator("Ram");
+            exitGate.setOperator("Neha");
             exitGate.setParkingLotId(1);
             exitGate.setFloorNumber(i);
 
@@ -88,10 +93,11 @@ public class InitServiceImpl implements InitService {
 
             floors.add(parkingFloor);
             parkingFloorRepository.put(parkingFloor);
+
+            floors.add(parkingFloor);
         }
 
         parkingLot.setParkingFloors(floors);
         parkingLotRepository.put(parkingLot);
-
     }
 }
