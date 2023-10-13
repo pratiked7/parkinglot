@@ -9,9 +9,7 @@ import repository.GateRepository;
 import repository.ParkingFloorRepository;
 import repository.ParkingLotRepository;
 import repository.ParkingSlotRepository;
-import service.strategy.billCalculationStrategy.BillCalculationStrategy;
 import service.strategy.billCalculationStrategy.BillCalculationStrategyFactory;
-import service.strategy.slotAllocationStrategy.SlotAllocationStrategy;
 import service.strategy.slotAllocationStrategy.SlotAllocationStrategyFactory;
 
 import java.util.ArrayList;
@@ -20,10 +18,10 @@ import java.util.List;
 
 public class InitServiceImpl implements InitService {
 
-    private ParkingSlotRepository parkingSlotRepository;
-    private ParkingFloorRepository parkingFloorRepository;
-    private GateRepository gateRepository;
-    private ParkingLotRepository parkingLotRepository;
+    private final ParkingSlotRepository parkingSlotRepository;
+    private final ParkingFloorRepository parkingFloorRepository;
+    private final GateRepository gateRepository;
+    private final ParkingLotRepository parkingLotRepository;
 
     public InitServiceImpl(ParkingSlotRepository parkingSlotRepository,
                            ParkingFloorRepository parkingFloorRepository,
@@ -37,6 +35,8 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void init() {
+
+        //add a parking lot
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setId(1);
         parkingLot.setName("Parking Lot 1");
@@ -46,6 +46,7 @@ public class InitServiceImpl implements InitService {
         parkingLot.setSlotAllocationStrategy(SlotAllocationStrategyFactory.getSlotAllocationStrategy());
         parkingLot.setBillCalculationStrategy(BillCalculationStrategyFactory.getBillCalculationStrategy());
 
+        //add floors
         List<ParkingFloor> floors = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
@@ -54,6 +55,7 @@ public class InitServiceImpl implements InitService {
             parkingFloor.setId(i);
             parkingFloor.setFloorNumber(i);
 
+            //add slots
             List<ParkingSlot> slots = new ArrayList<>();
 
             for (int j = 1; j <= 10; j++) {

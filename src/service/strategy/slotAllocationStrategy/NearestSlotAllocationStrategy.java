@@ -14,12 +14,9 @@ public class NearestSlotAllocationStrategy implements SlotAllocationStrategy{
 
         int floorNumber = entryGate.getFloorNumber();
 
-        for (ParkingSlot slot: parkingLot.getParkingFloors().get(floorNumber).getParkingSlots()){
-
-            if(slot.getSupportedVehicleType().equals(vehicleType)
-                    && slot.getParkingSlotStatus().equals(ParkingSlotStatus.AVAILABLE)){
-                return slot;
-            }
+        ParkingSlot onTheSameFloor = searchAvailableSlot(parkingLot, vehicleType, floorNumber);
+        if(onTheSameFloor != null){
+            return onTheSameFloor;
         }
 
         int i = floorNumber - 1;
@@ -27,29 +24,33 @@ public class NearestSlotAllocationStrategy implements SlotAllocationStrategy{
 
         while (i >= 0 || j < parkingLot.getParkingFloors().size()){
             if(i >= 0){
-                for (ParkingSlot slot: parkingLot.getParkingFloors().get(i).getParkingSlots()){
-
-                    if(slot.getSupportedVehicleType().equals(vehicleType)
-                            && slot.getParkingSlotStatus().equals(ParkingSlotStatus.AVAILABLE)){
-                        return slot;
-                    }
+                ParkingSlot downFloor = searchAvailableSlot(parkingLot, vehicleType, i);
+                if(downFloor != null){
+                    return downFloor;
                 }
-
-                if(j < parkingLot.getParkingFloors().size()){
-                    for (ParkingSlot slot: parkingLot.getParkingFloors().get(j).getParkingSlots()){
-
-                        if(slot.getSupportedVehicleType().equals(vehicleType)
-                                && slot.getParkingSlotStatus().equals(ParkingSlotStatus.AVAILABLE)){
-                            return slot;
-                        }
-                    }
-                }
-                i--;
-                j++;
             }
+
+            if(j < parkingLot.getParkingFloors().size()){
+                ParkingSlot upFloor = searchAvailableSlot(parkingLot, vehicleType, j);
+                if(upFloor != null){
+                    return upFloor;
+                }
+            }
+            i--;
+            j++;
         }
 
         throw new NoParkingSlotAvailableException("No parking slot available");
-        //TODO: remove redundant code
+    }
+
+    private ParkingSlot searchAvailableSlot(ParkingLot parkingLot, VehicleType vehicleType, int floorNumber){
+
+        for (ParkingSlot slot: parkingLot.getParkingFloors().get(floorNumber).getParkingSlots()){
+            if(slot.getSupportedVehicleType().equals(vehicleType)
+                    && slot.getParkingSlotStatus().equals(ParkingSlotStatus.AVAILABLE)){
+                return slot;
+            }
+        }
+        return null;
     }
 }
