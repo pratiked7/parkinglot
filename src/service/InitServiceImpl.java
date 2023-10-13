@@ -85,7 +85,7 @@ public class InitServiceImpl implements InitService {
             exitGate.setParkingLotId(1);
             exitGate.setFloorNumber(i);
 
-            gateRepository.put(exitGate);
+            gateRepository.put(entryGate);
             gateRepository.put(exitGate);
 
             List<Gate> gates = new ArrayList<>(Arrays.asList(entryGate, exitGate));
