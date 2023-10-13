@@ -7,7 +7,9 @@ public class TicketRequestDTO {
     private int parkingLotId;
     private int gateId;
     private String number;
+    private String color;
     private VehicleType vehicleType;
+    private String name;
 
     public int getParkingLotId() {
         return parkingLotId;
@@ -39,5 +41,21 @@ public class TicketRequestDTO {
 
     public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

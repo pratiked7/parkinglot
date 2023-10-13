@@ -6,6 +6,15 @@ public class TicketResponseDTO {
     private String vehicleNumber;
     private int slotNumber;
 
+    @Override
+    public String toString() {
+        return "TicketResponseDTO{" +
+                "entryTime='" + entryTime + '\'' +
+                ", vehicleNumber='" + vehicleNumber + '\'' +
+                ", slotNumber=" + slotNumber +
+                '}';
+    }
+
     public String getEntryTime() {
         return entryTime;
     }

@@ -2,12 +2,15 @@ package controller;
 
 import dto.TicketRequestDTO;
 import dto.TicketResponseDTO;
+import models.Ticket;
 import models.Vehicle;
 import repository.GateRepository;
 import repository.ParkingLotRepository;
 import repository.TicketRepository;
 import service.TicketService;
 import service.TicketServiceImpl;
+
+import java.time.LocalDateTime;
 
 public class TicketController {
 
@@ -16,12 +19,27 @@ public class TicketController {
 
 
     public TicketController(ParkingLotRepository parkingLotRepository, GateRepository gateRepository, TicketRepository ticketRepository){
-        this.ticketService = new TicketServiceImpl();
-    } {
+        this.ticketService = new TicketServiceImpl(parkingLotRepository, gateRepository, ticketRepository);
     }
 
     public TicketResponseDTO createTicket(TicketRequestDTO ticketRequestDTO){
 
-        Vehicle vehicle = new Vehicle();
+        Vehicle vehicle = new Vehicle(
+                ticketRequestDTO.getNumber(),
+                ticketRequestDTO.getName(),
+                ticketRequestDTO.getColor(),
+                ticketRequestDTO.getVehicleType());
+
+        Ticket ticket = ticketService.createTicket(
+                vehicle,
+                ticketRequestDTO.getGateId(),
+                ticketRequestDTO.getParkingLotId(),
+                LocalDateTime.now());
+
+        TicketResponseDTO ticketResponseDTO = new TicketResponseDTO();
+        ticketResponseDTO.setEntryTime(ticket.getEntryTime().toString());
+        ticketResponseDTO.setSlotNumber(ticket.getParkingSlot().getNumber());
+        ticketResponseDTO.setVehicleNumber(ticket.getVehicle().getNumber());
+        return ticketResponseDTO;
     }
 }
